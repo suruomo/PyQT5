@@ -4,7 +4,7 @@ __date__ = '2020/9/20 17:04'
 import sys
 
 from PyQt5.QtWidgets import *
-from login import Ui_LoginDialog
+from login.login import Ui_LoginDialog
 
 if __name__ == '__main__':
 
