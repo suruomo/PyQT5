@@ -38,6 +38,7 @@ view.setModel(model)
 # 4.1 添加 & 删除按钮
 dialog = QDialog()
 dialog.setWindowTitle('sqlite操作')
+# 垂直布局
 layout = QVBoxLayout()
 layout.addWidget(view)
 
@@ -53,6 +54,8 @@ btn_add.clicked.connect(add_row)
 layout.addWidget(btn_add)
 btn_delete = QPushButton('删除')
 # 删除当前选中行
+# lambda表达式本质是匿名函数
+# 匿名函数，很少调用或者只有一次调用调用，完成简单函数功能的函数定义
 btn_delete.clicked.connect(lambda:model.removeRow(view.currentIndex().row()))
 layout.addWidget(btn_delete)
 dialog.setLayout(layout)
