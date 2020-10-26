@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import *
 
 from PyQt5.uic import loadUiType
 
-
 # UI--Logic分离
 # 下划线表示接受的第二个参数不用
 from book.dbutil import get_conn, close_conn
@@ -30,10 +29,10 @@ class MainApp(QMainWindow, ui):
         self.show_category()
         self.show_author()
         self.show_publisher()
-        # self.show_category_combobox()
-        # self.show_author_combobox()
-        # self.show_publisher_combobox()
-        # self.show_books()
+        self.show_category_combobox()
+        self.show_author_combobox()
+        self.show_publisher_combobox()
+        self.show_books()
         # self.show_client()
         # self.show_all_operations()
 
@@ -58,10 +57,10 @@ class MainApp(QMainWindow, ui):
         # self.editor_book_search_Button.clicked.connect(self.search_book)
         # self.editor_book_save_Button.clicked.connect(self.editor_book)
         # self.editor_book_delete_Button.clicked.connect(self.delete_book)
-        # self.dark_orange_button.clicked.connect(self.dark_orange_theme)
-        # self.dark_blue_button.clicked.connect(self.dark_blue_theme)
-        # self.dark_gray_button.clicked.connect(self.dark_gray_theme)
-        # self.qdark_button.clicked.connect(self.qdark_theme)
+        self.dark_orange_button.clicked.connect(self.dark_orange_theme)
+        self.dark_blue_button.clicked.connect(self.dark_blue_theme)
+        self.dark_gray_button.clicked.connect(self.dark_gray_theme)
+        self.qdark_button.clicked.connect(self.qdark_theme)
         # self.add_user_button.clicked.connect(self.add_user)
         # self.login_button.clicked.connect(self.user_login)
         # self.editor_user_button.clicked.connect(self.editor_user)
@@ -76,11 +75,11 @@ class MainApp(QMainWindow, ui):
 
     # 主题的显示
     def show_themes(self):
-            self.theme_groupBox.show()
+        self.theme_groupBox.show()
 
     # 主题的隐藏
     def hide_themes(self):
-            self.theme_groupBox.hide()
+        self.theme_groupBox.hide()
 
     # 选项卡联动，按照tab的索引切换
     def open_book_tab(self):
@@ -139,7 +138,7 @@ class MainApp(QMainWindow, ui):
                 row_position = self.category_table.rowCount()
                 self.category_table.insertRow(row_position)
 
- # 添加作者
+    # 添加作者
     def add_author(self):
         #  数据库操作流程
         # 1、获取连接
@@ -218,6 +217,97 @@ class MainApp(QMainWindow, ui):
 
                 row_position = self.publisher_table.rowCount()
                 self.publisher_table.insertRow(row_position)
+
+    # 将基础数据和combobox绑定 显示在下拉列表中
+    def show_category_combobox(self):
+        conn = get_conn()
+        cur = conn.cursor()
+        sql = "select category_name from category"
+        cur.execute(sql)
+        data = cur.fetchall()
+
+        if data:
+            self.add_book_type.clear()
+            self.edit_book_type.clear()
+            for category in data:
+                self.add_book_type.addItem(category[0])
+                self.edit_book_type.addItem(category[0])
+
+    def show_author_combobox(self):
+        conn = get_conn()
+        cur = conn.cursor()
+        sql = "select author_name from author"
+        cur.execute(sql)
+        data = cur.fetchall()
+
+        if data:
+            self.add_book_author.clear()
+            self.edit_book_author.clear()
+            for author in data:
+                self.add_book_author.addItem(author[0])
+                self.edit_book_author.addItem(author[0])
+
+    def show_publisher_combobox(self):
+        conn = get_conn()
+        cur = conn.cursor()
+        sql = "select publisher_name from publisher"
+        cur.execute(sql)
+        data = cur.fetchall()
+
+        if data:
+            self.add_book_publisher.clear()
+            self.edit_book_publisher.clear()
+            for publisher in data:
+                self.add_book_publisher.addItem(publisher[0])
+                self.edit_book_publisher.addItem(publisher[0])
+
+    # 获取所有图书
+    def show_books(self):
+        #  数据库操作流程
+        # 1、获取连接
+        conn = get_conn()
+        # 2、获取cursor
+        cur = conn.cursor()
+        sql = "select book_code, book_name, book_description, book_category," \
+              " book_author, book_publisher, book_price from book"
+        cur.execute(sql)
+        data = cur.fetchall()
+
+        self.book_table.setRowCount(0)
+        self.book_table.insertRow(0)
+
+        for row, form in enumerate(data):
+            for column, item in enumerate(form):
+                self.book_table.setItem(row, column, QTableWidgetItem(str(item)))
+                column += 1
+
+            row_postion = self.book_table.rowCount()
+            self.book_table.insertRow(row_postion)
+
+
+ # 主题设置
+    def dark_blue_theme(self):
+        style = open("themes/darkblue.css", 'r')
+        style = style.read()
+        self.setStyleSheet(style)
+
+    # 主题设置
+    def dark_gray_theme(self):
+        style = open("themes/darkgray.css", 'r')
+        style = style.read()
+        self.setStyleSheet(style)
+
+    # 主题设置
+    def dark_orange_theme(self):
+        style = open("themes/darkorange.css", 'r')
+        style = style.read()
+        self.setStyleSheet(style)
+
+    # 主题设置
+    def qdark_theme(self):
+        style = open("themes/qdark.css", 'r')
+        style = style.read()
+        self.setStyleSheet(style)
 
 
 def main():

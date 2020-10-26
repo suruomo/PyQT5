@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>879</width>
-    <height>655</height>
+    <width>945</width>
+    <height>667</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -181,7 +181,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -200,8 +200,58 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="tab_10">
+       <attribute name="title">
+        <string>所有图书</string>
+       </attribute>
+       <widget class="QTableWidget" name="book_table">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>10</y>
+          <width>711</width>
+          <height>531</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>书号</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>书名</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>书籍介绍</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>书籍种类</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>书籍作者</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>出版社</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>价格</string>
+         </property>
+        </column>
+       </widget>
+      </widget>
       <widget class="QWidget" name="tab_6">
        <attribute name="title">
         <string>添加书籍</string>
@@ -293,8 +343,8 @@
          <rect>
           <x>500</x>
           <y>90</y>
-          <width>87</width>
-          <height>22</height>
+          <width>101</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -303,8 +353,8 @@
          <rect>
           <x>500</x>
           <y>140</y>
-          <width>87</width>
-          <height>22</height>
+          <width>121</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -326,8 +376,8 @@
          <rect>
           <x>500</x>
           <y>190</y>
-          <width>87</width>
-          <height>22</height>
+          <width>181</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -406,8 +456,8 @@
          <rect>
           <x>520</x>
           <y>100</y>
-          <width>87</width>
-          <height>22</height>
+          <width>91</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -491,8 +541,8 @@
          <rect>
           <x>520</x>
           <y>200</y>
-          <width>87</width>
-          <height>22</height>
+          <width>181</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -524,8 +574,8 @@
          <rect>
           <x>520</x>
           <y>150</y>
-          <width>87</width>
-          <height>22</height>
+          <width>101</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -611,7 +661,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_7">
        <attribute name="title">
@@ -822,7 +872,7 @@
       <string>换个主题，换个心情！</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="dark_orange_button">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -832,10 +882,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>主题一</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="dark_blue_button">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -845,10 +895,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>主题二</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="dark_gray_button">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -858,10 +908,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>主题三</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="qdark_button">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -871,7 +921,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>主题四</string>
      </property>
     </widget>
     <widget class="QPushButton" name="theme_change_Button">
@@ -901,8 +951,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>879</width>
-     <height>26</height>
+     <width>945</width>
+     <height>23</height>
     </rect>
    </property>
   </widget>
