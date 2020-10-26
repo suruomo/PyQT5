@@ -53,10 +53,10 @@ class MainApp(QMainWindow, ui):
         self.add_category_Button.clicked.connect(self.add_category)
         self.add_author_Button.clicked.connect(self.add_author)
         self.add_publisher_Button.clicked.connect(self.add_publisher)
-        # self.add_book_save_Button.clicked.connect(self.add_book)
-        # self.editor_book_search_Button.clicked.connect(self.search_book)
-        # self.editor_book_save_Button.clicked.connect(self.editor_book)
-        # self.editor_book_delete_Button.clicked.connect(self.delete_book)
+        self.add_book_save_Button.clicked.connect(self.add_book)
+        self.edit_book_search_Button.clicked.connect(self.search_book)
+        self.edit_book_save_Button.clicked.connect(self.editor_book)
+        self.edit_book_delete_Button.clicked.connect(self.delete_book)
         self.dark_orange_button.clicked.connect(self.dark_orange_theme)
         self.dark_blue_button.clicked.connect(self.dark_blue_theme)
         self.dark_gray_button.clicked.connect(self.dark_gray_theme)
@@ -227,11 +227,11 @@ class MainApp(QMainWindow, ui):
         data = cur.fetchall()
 
         if data:
-            self.add_book_type.clear()
-            self.edit_book_type.clear()
+            self.add_book_category.clear()
+            self.edit_book_category.clear()
             for category in data:
-                self.add_book_type.addItem(category[0])
-                self.edit_book_type.addItem(category[0])
+                self.add_book_category.addItem(category[0])
+                self.edit_book_category.addItem(category[0])
 
     def show_author_combobox(self):
         conn = get_conn()
@@ -285,7 +285,7 @@ class MainApp(QMainWindow, ui):
             self.book_table.insertRow(row_postion)
 
 
- # 主题设置
+     # 主题设置
     def dark_blue_theme(self):
         style = open("themes/darkblue.css", 'r')
         style = style.read()
@@ -308,6 +308,108 @@ class MainApp(QMainWindow, ui):
         style = open("themes/qdark.css", 'r')
         style = style.read()
         self.setStyleSheet(style)
+
+ # 1、添加图书 ,插入小数的问题
+    # 2、正则表达式问题 后续
+    def add_book(self):
+        #  数据库操作流程
+        # 1、获取连接
+        conn = get_conn()
+        # 2、获取cursor
+        cur = conn.cursor()
+        # 3、SQl语句
+        sql = "insert into book(book_name, book_description, book_code,book_category, " \
+              "book_author, book_publisher, book_price) values(%s, %s, %s, %s, %s, %s, %s)"
+
+        book_name = self.add_book_name.text()
+        book_description = self.add_book_desc.toPlainText()
+        book_code = self.add_book_code.text()
+        book_category = self.add_book_category.currentText()
+        book_author = self.add_book_author.currentText()
+        book_publisher = self.add_book_publisher.currentText()
+        book_price = self.add_book_price.text()
+        # 4、执行语句
+        cur.execute(sql, (book_name, book_description, book_code, book_category,
+                          book_author, book_publisher, book_price))
+        # 5、insert、update、delete必须显示提交
+        conn.commit()
+        # 6、关闭资源
+        close_conn(conn, cur)
+        self.add_book_name.setText('')
+        self.add_book_desc.setPlainText('')
+        self.add_book_code.setText('')
+        self.add_book_category.setCurrentIndex(0)
+        self.add_book_author.setCurrentIndex(0)
+        self.add_book_publisher.setCurrentIndex(0)
+        self.add_book_price.setText('')
+        self.statusBar().showMessage('图书添加成功！')
+        # self.add_publisher_name.setText('')
+        self.show_books()
+
+    # 查找书籍
+    def search_book(self):
+        conn = get_conn()
+        cur = conn.cursor()
+        sql = "select * from book where book_name = %s"
+        book_name = self.edit_search_name.text()
+        cur.execute(sql, (book_name, ))
+        data = cur.fetchone()
+        if data:
+            self.edit_book_name.setText(data[1])
+            self.edit_book_desc.setPlainText(data[2])
+            self.edit_book_category.setCurrentText(data[3])
+            self.edit_book_author.setCurrentText(data[4])
+            self.edit_book_publisher.setCurrentText(data[5])
+            self.edit_book_price.setText(str(data[6]))
+            self.edit_book_code.setText(data[7])
+
+        else:
+            self.statusBar().showMessage('没有这个书籍')
+
+    # 修改书籍
+    def editor_book(self):
+        #  数据库操作流程
+        # 1、获取连接
+        conn = get_conn()
+        # 2、获取cursor
+        cur = conn.cursor()
+        # 3、SQl语句
+        sql = "update book set book_name=%s, book_description=%s, book_code=%s,book_category=%s, " \
+              "book_author=%s, book_publisher=%s, book_price=%s  where book_name=%s"
+        book_name = self.edit_book_name.text()
+        book_description = self.edit_book_desc.toPlainText()
+        book_code = self.edit_book_code.text()
+        book_category = self.edit_book_category.currentText()
+        book_author = self.edit_book_author.currentText()
+        book_publisher = self.edit_book_publisher.currentText()
+        book_price = self.edit_book_price.text()
+        book_old_name = self.edit_search_name.text()
+        # 4、执行语句
+        cur.execute(sql, (book_name, book_description, book_code, book_category,
+                          book_author, book_publisher, book_price, book_old_name))
+        # 5、insert、update、delete必须显示提交
+        conn.commit()
+        self.show_books()
+        self.statusBar().showMessage('图书修改成功！')
+
+    # 删除书籍
+    def delete_book(self):
+        #  数据库操作流程
+        # 1、获取连接
+        conn = get_conn()
+        # 2、获取cursor
+        cur = conn.cursor()
+        sql = "delete from book where book_name = %s"
+        book_name = self.edit_book_name.text()
+
+        warning = QMessageBox.warning(self, '删除图书', '你确定要删除',
+                                      QMessageBox.Yes | QMessageBox.No)
+        if warning == QMessageBox.Yes:
+            cur.execute(sql, (book_name, ))
+            conn.commit()
+            close_conn(conn, cur)
+            self.show_books()
+            self.statusBar().showMessage('图书成功删除')
 
 
 def main():
