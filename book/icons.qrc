@@ -7,5 +7,6 @@
         <file>icons/settings.png</file>
         <file>icons/dashboard.png</file>
         <file>icons/today.png</file>
+        <file>icons/client.jpg</file>
     </qresource>
 </RCC>
