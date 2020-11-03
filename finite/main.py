@@ -9,6 +9,7 @@ import sys
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 # 引入ui资源
+
 main_ui, _ = loadUiType('main.ui')
 
 
@@ -22,27 +23,36 @@ class MainApp(QMainWindow, main_ui):
         self.init_vtk_view()
         self.handle_events()
 
+    # 绑定事件
     def handle_events(self):
         self.import_geometry_action.triggered.connect(self.show_geometry)
 
+    # 初始化vtk视图区域
     def init_vtk_view(self):
         # 在之前创建的view_widget上添加vtk控件
-        vtk_vertical_layout = QVBoxLayout(self.view_widget)
+        self.vtk_vertical_layout = QVBoxLayout(self.view_widget)
         vtk_widget = QVTKRenderWindowInteractor(self.view_widget)
-        vtk_vertical_layout.addWidget(vtk_widget)
-        # 1.创建窗口
-        render_window = vtk_widget.GetRenderWindow()
+        self.vtk_vertical_layout.addWidget(vtk_widget)
+        # 1.创建RenderWindow窗口
+        self.render_window = vtk_widget.GetRenderWindow()
         # 2.创建render
         self.renderer = vtk.vtkRenderer()
         self.renderer.SetBackground(1.0, 1.0, 1.0)  # 设置页面底部颜色值
         self.renderer.SetBackground2(0.1, 0.2, 0.4)  # 设置页面顶部颜色值
         self.renderer.SetGradientBackground(1)  # 开启渐变色背景设置
-        render_window.AddRenderer(self.renderer)
-        render_window.Render()
+        self.render_window.AddRenderer(self.renderer)
+        self.render_window.Render()
         # 3.设置交互方式
-        self.iren = render_window.GetInteractor()  # 获取交互器
+        self.iren = self.render_window.GetInteractor()  # 获取交互器
         style = vtk.vtkInteractorStyleTrackballCamera()  # 交互器样式的一种，该样式下，用户是通过控制相机对物体作旋转、放大、缩小等操作
         self.iren.SetInteractorStyle(style)
+        # 4.添加坐标轴(加self,血的教训）
+        axesActor = vtk.vtkAxesActor()
+        self.axes_widget = vtk.vtkOrientationMarkerWidget()
+        self.axes_widget.SetOrientationMarker(axesActor)
+        self.axes_widget.SetInteractor(self.iren)
+        self.axes_widget.EnabledOn()
+        self.axes_widget.InteractiveOff() # 坐标系是否可移动
 
     def show_geometry(self):
         # 文件选择器
@@ -65,8 +75,7 @@ class MainApp(QMainWindow, main_ui):
             self.renderer.ResetCamera()
             # 交互器初始化，否则需要点一下才能显示模型
             self.iren.Initialize()
-
-        self.statusBar().showMessage('成功导入模型！')
+            self.statusBar().showMessage('成功导入模型！')
 
 
 if __name__ == '__main__':
