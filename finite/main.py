@@ -57,8 +57,8 @@ class MainApp(QMainWindow, main_ui):
 
     def show_geometry(self):
         # 使用QSettings记录上次打开路径
-        qSettins=QSettings()
-        lastPath=qSettins.value("LastFilePath")
+        qSettings=QSettings()
+        lastPath=qSettings.value("LastFilePath")
         # 文件选择器
         filename, _ = QFileDialog.getOpenFileName(
             self, '打开文件 - stl文件', lastPath, '(*.stl)')
