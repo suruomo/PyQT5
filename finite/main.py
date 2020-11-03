@@ -3,6 +3,7 @@ __author__ = 'suruomo'
 __date__ = '2020/10/29 13:57'
 
 import vtk
+from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 import sys
@@ -55,9 +56,12 @@ class MainApp(QMainWindow, main_ui):
         self.axes_widget.InteractiveOff() # 坐标系是否可移动
 
     def show_geometry(self):
+        # 使用QSettings记录上次打开路径
+        qSettins=QSettings()
+        lastPath=qSettins.value("LastFilePath")
         # 文件选择器
         filename, _ = QFileDialog.getOpenFileName(
-            self, '打开文件 - stl文件', '.', '(*.stl)')
+            self, '打开文件 - stl文件', lastPath, '(*.stl)')
         if filename:
             # 1.数据源：读取stl文件
             self.original_model = vtk.vtkSTLReader()
