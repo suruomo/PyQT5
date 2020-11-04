@@ -32,10 +32,10 @@ class MainApp(QMainWindow, main_ui):
     def init_vtk_view(self):
         # 在之前创建的view_widget上添加vtk控件
         self.vtk_vertical_layout = QVBoxLayout(self.view_widget)
-        vtk_widget = QVTKRenderWindowInteractor(self.view_widget)
-        self.vtk_vertical_layout.addWidget(vtk_widget)
+        self.vtk_widget = QVTKRenderWindowInteractor(self.view_widget)
+        self.vtk_vertical_layout.addWidget(self.vtk_widget)
         # 1.创建RenderWindow窗口
-        self.render_window = vtk_widget.GetRenderWindow()
+        self.render_window = self.vtk_widget.GetRenderWindow()
         # 2.创建render
         self.renderer = vtk.vtkRenderer()
         self.renderer.SetBackground(1.0, 1.0, 1.0)  # 设置页面底部颜色值
@@ -54,6 +54,8 @@ class MainApp(QMainWindow, main_ui):
         self.axes_widget.SetInteractor(self.iren)
         self.axes_widget.EnabledOn()
         self.axes_widget.InteractiveOff() # 坐标系是否可移动
+        # 5.添加Actor
+        self.original_actor = vtk.vtkActor()
 
     def show_geometry(self):
         # 使用QSettings记录上次打开路径
@@ -62,6 +64,9 @@ class MainApp(QMainWindow, main_ui):
         # 文件选择器
         filename, _ = QFileDialog.getOpenFileName(
             self, '打开文件 - stl文件', lastPath, '(*.stl)')
+        # 如果刚才已经打开过模型，则删除上一个
+        if self.original_actor:
+             self.renderer.RemoveActor(self.original_actor)
         if filename:
             # 1.数据源：读取stl文件
             self.original_model = vtk.vtkSTLReader()
@@ -70,8 +75,7 @@ class MainApp(QMainWindow, main_ui):
             # 2.创建mapper，建图
             self.original_mapper = vtk.vtkPolyDataMapper()
             self.original_mapper.SetInputConnection(self.original_model.GetOutputPort())
-            # 3.创建执行单元：演员
-            self.original_actor = vtk.vtkActor()
+            # 3.设置执行单元：演员
             self.original_actor.SetMapper(self.original_mapper)
             self.original_actor.GetProperty().SetColor(0.5, 0.5, 0.5)
             # 4.渲染renderer
