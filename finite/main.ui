@@ -6,27 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1201</width>
-    <height>821</height>
+    <width>1263</width>
+    <height>868</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1201</width>
-    <height>821</height>
+    <width>1263</width>
+    <height>868</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>有限元仿真建模系统</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <property name="minimumSize">
-    <size>
-     <width>932</width>
-     <height>693</height>
-    </size>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -43,19 +37,13 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
-      </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="Line" name="line">
         <property name="minimumSize">
          <size>
           <width>16</width>
-          <height>691</height>
+          <height>651</height>
          </size>
         </property>
         <property name="orientation">
@@ -67,8 +55,8 @@
        <widget class="QWidget" name="view_widget" native="true">
         <property name="minimumSize">
          <size>
-          <width>983</width>
-          <height>691</height>
+          <width>971</width>
+          <height>651</height>
          </size>
         </property>
         <property name="mouseTracking">
@@ -88,7 +76,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1201</width>
+     <width>1263</width>
      <height>26</height>
     </rect>
    </property>
@@ -157,8 +145,8 @@
   <widget class="QDockWidget" name="dockWidget">
    <property name="minimumSize">
     <size>
-     <width>189</width>
-     <height>693</height>
+     <width>201</width>
+     <height>620</height>
     </size>
    </property>
    <property name="toolTip">
@@ -168,18 +156,91 @@
     <string/>
    </property>
    <property name="windowTitle">
-    <string>有限元模型管理</string>
+    <string>管理</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents"/>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="minimumSize">
+        <size>
+         <width>201</width>
+         <height>594</height>
+        </size>
+       </property>
+       <column>
+        <property name="text">
+         <string>有限元模型</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>几何模型</string>
+        </property>
+        <property name="checkState">
+         <enum>Unchecked</enum>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>单元</string>
+        </property>
+        <property name="checkState">
+         <enum>Unchecked</enum>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>材料</string>
+        </property>
+        <property name="checkState">
+         <enum>Unchecked</enum>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>约束</string>
+        </property>
+        <property name="checkState">
+         <enum>Unchecked</enum>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>载荷</string>
+        </property>
+        <property name="checkState">
+         <enum>Unchecked</enum>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2">
    <property name="minimumSize">
     <size>
-     <width>1113</width>
-     <height>42</height>
+     <width>1246</width>
+     <height>157</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -188,7 +249,35 @@
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2"/>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTextBrowser" name="OutputBrowser">
+       <property name="minimumSize">
+        <size>
+         <width>1224</width>
+         <height>109</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">

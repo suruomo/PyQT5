@@ -9,8 +9,7 @@ from PyQt5.uic import loadUiType
 import sys
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
-# 引入ui资源
-
+# 引入ui资
 main_ui, _ = loadUiType('main.ui')
 
 
@@ -53,20 +52,20 @@ class MainApp(QMainWindow, main_ui):
         self.axes_widget.SetOrientationMarker(axesActor)
         self.axes_widget.SetInteractor(self.iren)
         self.axes_widget.EnabledOn()
-        self.axes_widget.InteractiveOff() # 坐标系是否可移动
+        self.axes_widget.InteractiveOff()  # 坐标系是否可移动
         # 5.添加Actor
         self.original_actor = vtk.vtkActor()
 
     def show_geometry(self):
         # 使用QSettings记录上次打开路径
-        qSettings=QSettings()
-        lastPath=qSettings.value("LastFilePath")
+        qSettings = QSettings()
+        lastPath = qSettings.value("LastFilePath")
         # 文件选择器
         filename, _ = QFileDialog.getOpenFileName(
             self, '打开文件 - stl文件', lastPath, '(*.stl)')
         # 如果刚才已经打开过模型，则删除上一个
         if self.original_actor:
-             self.renderer.RemoveActor(self.original_actor)
+            self.renderer.RemoveActor(self.original_actor)
         if filename:
             # 1.数据源：读取stl文件
             self.original_model = vtk.vtkSTLReader()
@@ -83,6 +82,7 @@ class MainApp(QMainWindow, main_ui):
             self.renderer.ResetCamera()
             # 交互器初始化，否则需要点一下才能显示模型
             self.iren.Initialize()
+            self.iren.Start()
             self.statusBar().showMessage('成功导入模型！')
 
 
