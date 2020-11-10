@@ -133,6 +133,16 @@
      <string>帮助</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu_7">
+    <property name="title">
+     <string>拾取</string>
+    </property>
+    <addaction name="point_pick"/>
+    <addaction name="edge_pick"/>
+    <addaction name="surface_pick"/>
+    <addaction name="cell_pick"/>
+    <addaction name="all_pick"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menuGrid"/>
    <addaction name="menu_2"/>
@@ -140,8 +150,8 @@
    <addaction name="menu_4"/>
    <addaction name="menu_5"/>
    <addaction name="menu_6"/>
+   <addaction name="menu_7"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidget">
    <property name="minimumSize">
     <size>
@@ -273,6 +283,12 @@
          <width>1224</width>
          <height>109</height>
         </size>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
        </property>
       </widget>
      </item>
@@ -410,6 +426,31 @@
    </property>
    <property name="text">
     <string>下一步</string>
+   </property>
+  </action>
+  <action name="point_pick">
+   <property name="text">
+    <string>point</string>
+   </property>
+  </action>
+  <action name="edge_pick">
+   <property name="text">
+    <string>edge</string>
+   </property>
+  </action>
+  <action name="surface_pick">
+   <property name="text">
+    <string>surface</string>
+   </property>
+  </action>
+  <action name="cell_pick">
+   <property name="text">
+    <string>cell</string>
+   </property>
+  </action>
+  <action name="all_pick">
+   <property name="text">
+    <string>all</string>
    </property>
   </action>
  </widget>

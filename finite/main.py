@@ -8,24 +8,25 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 import sys
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from finite.pick import MyInteractor
 
-# 引入ui资
-main_ui, _ = loadUiType('main.ui')
+main_ui, _ = loadUiType('main.ui')  # 引入ui资源
 
 
-# 主操作界面
-class MainApp(QMainWindow, main_ui):
+class MainApp(QMainWindow, main_ui):  # 主操作界面
 
     # 定义构造方法
     def __init__(self):
         QMainWindow.__init__(self)
         self.setupUi(self)
+        self.pick_actor = vtk.vtkActor()
         self.init_vtk_view()
         self.handle_events()
 
     # 绑定事件
     def handle_events(self):
         self.import_geometry_action.triggered.connect(self.show_geometry)
+        self.point_pick.triggered.connect(self.pick_point)
 
     # 初始化vtk视图区域
     def init_vtk_view(self):
@@ -44,8 +45,13 @@ class MainApp(QMainWindow, main_ui):
         self.render_window.Render()
         # 3.设置交互方式
         self.iren = self.render_window.GetInteractor()  # 获取交互器
-        style = vtk.vtkInteractorStyleTrackballCamera()  # 交互器样式的一种，该样式下，用户是通过控制相机对物体作旋转、放大、缩小等操作
-        self.iren.SetInteractorStyle(style)
+        self.style = vtk.vtkInteractorStyleTrackballCamera()  # 交互器样式的一种，该样式下，用户是通过控制相机对物体作旋转、放大、缩小等操作
+        # self.style = MyInteractor(self)
+        self.style.SetDefaultRenderer(self.renderer)
+        self.iren.SetInteractorStyle(self.style)
+        # 拾取器
+        cellPicker = vtk.vtkCellPicker()
+        self.iren.SetPicker(cellPicker)
         # 4.添加坐标轴(加self,血的教训）
         axesActor = vtk.vtkAxesActor()
         self.axes_widget = vtk.vtkOrientationMarkerWidget()
@@ -56,21 +62,27 @@ class MainApp(QMainWindow, main_ui):
         # 5.添加Actor
         self.original_actor = vtk.vtkActor()
 
+    # 加载几何模型
     def show_geometry(self):
         # 使用QSettings记录上次打开路径
         qSettings = QSettings()
         lastPath = qSettings.value("LastFilePath")
         # 文件选择器
         filename, _ = QFileDialog.getOpenFileName(
-            self, '打开文件 - stl文件', lastPath, '(*.stl)')
+            self, '打开文件 - vtk文件', lastPath, '(*.vtk)')
         # 如果刚才已经打开过模型，则删除上一个
         if self.original_actor:
             self.renderer.RemoveActor(self.original_actor)
+            # 如果上一次选点，则取消上一次选点标记
+            if self.pick_actor:
+                self.renderer.RemoveActor(self.pick_actor)
+
         if filename:
             # 1.数据源：读取stl文件
-            self.original_model = vtk.vtkSTLReader()
+            self.original_model = vtk.vtkPolyDataReader()
             self.original_model.SetFileName(filename)
             self.original_model.Update()
+            self.output_point()
             # 2.创建mapper，建图
             self.original_mapper = vtk.vtkPolyDataMapper()
             self.original_mapper.SetInputConnection(self.original_model.GetOutputPort())
@@ -83,7 +95,50 @@ class MainApp(QMainWindow, main_ui):
             # 交互器初始化，否则需要点一下才能显示模型
             self.iren.Initialize()
             self.iren.Start()
-            self.statusBar().showMessage('成功导入模型！')
+            self.OutputBrowser.append('成功导入模型！')
+
+    def output_point(self):
+        polydata = self.original_model.GetOutput()
+        string = "Number of Cells:" + str(polydata.GetNumberOfCells())
+        self.OutputBrowser.append(string)
+        string = "Number of Points:" + str(polydata.GetNumberOfPoints())
+        self.OutputBrowser.append(string)
+
+    def pick_point(self):
+        self.style.AddObserver("RightButtonPressEvent", self.RightButtonPressEvent)
+
+    # 右键拾取点
+    def RightButtonPressEvent(self, obj, event):
+        # 选择当前像素
+        clickPos = self.render_window.GetInteractor().GetEventPosition()
+        self.OutputBrowser.append("Picking pixel: " + str(clickPos))
+
+        picker = self.render_window.GetInteractor().GetPicker()
+        picker.Pick(clickPos[0], clickPos[1], 0, self.renderer)
+
+        # 选取到模型上一点
+        if (picker.GetCellId() != -1):
+            self.OutputBrowser.append("Pick position is: " + str(picker.GetPickPosition()))
+            self.OutputBrowser.append("Cell id is:" + str(picker.GetCellId()))
+            self.OutputBrowser.append("Point id is:" + str(picker.GetPointId()))
+            point_position = self.original_model.GetOutput().GetPoint(picker.GetPointId())
+            # 如果上一次选点，则取消上一次选点标记
+            if self.pick_actor:
+                self.renderer.RemoveActor(self.pick_actor)
+
+            # 创建点标识
+            sphereSource = vtk.vtkSphereSource()
+            sphereSource.SetCenter(point_position)
+            sphereSource.SetRadius(0.2)
+            mapper = vtk.vtkPolyDataMapper()
+            mapper.SetInputConnection(sphereSource.GetOutputPort())
+            self.pick_actor.SetMapper(mapper)
+            self.pick_actor.GetProperty().SetColor(1.0, 0.0, 0.0)
+            self.renderer.AddActor(self.pick_actor)
+
+        # Forward events
+        self.style.OnRightButtonDown()
+        return
 
 
 if __name__ == '__main__':
